@@ -39,8 +39,8 @@ def query():
 @app.post('/feedback')
 def user_feedback():
     span_id = request.json['span_id']
-    thumbs_up = request.json['thumbs_up']
-    return handler.mark_feedback(span_id, thumbs_up)
+    feedback = request.json['feedback']
+    return handler.mark_feedback(span_id, feedback)
 
 
 @app.get('/report')
