@@ -6,7 +6,7 @@ from openai import OpenAI
 from openinference.instrumentation.openai import OpenAIInstrumentor
 from phoenix.otel import register
 
-from handler import ask_llm_with_tracing
+import handler
 from model import Server
 
 load_dotenv('envs/inferix.env')
@@ -32,7 +32,14 @@ server = initialize_server()
 @app.get('/query')
 def query():
     question = request.json['question']
-    return ask_llm_with_tracing(question, server)
+    return handler.ask_llm_with_tracing(question, server)
+
+
+@app.post('/feedback')
+def user_feedback():
+    span_id = request.json['span_id']
+    thumbs_up = request.json['thumbs_up']
+    return handler.mark_feedback(span_id, thumbs_up)
 
 
 if __name__ == '__main__':

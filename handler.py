@@ -4,7 +4,8 @@ from typing import Dict
 from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttributes
 from opentelemetry import trace
 
-from model import Server
+from arize_utils import annotate
+from model import Server, Annotation
 
 
 def ask_llm(question: str, server: Server) -> str:
@@ -30,3 +31,13 @@ def ask_llm_with_tracing(question, server) -> Dict:
 
         span.set_output(response)
         return {'answer': response, 'span_id': span_id}
+
+
+def mark_feedback(span_id: str, thumbs_up: bool):
+    annotate(
+        span_id,
+        annotations=[
+            Annotation('user-feedback', 'thumbs-up' if thumbs_up else 'thumbs-down', 1)
+        ]
+    )
+    return "Successfully processed the annotation request"
