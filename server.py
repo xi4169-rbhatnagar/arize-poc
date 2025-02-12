@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timedelta
 
 from dotenv import load_dotenv
 from flask import Flask, request
@@ -40,6 +41,20 @@ def user_feedback():
     span_id = request.json['span_id']
     thumbs_up = request.json['thumbs_up']
     return handler.mark_feedback(span_id, thumbs_up)
+
+
+@app.get('/report')
+def get_report():
+    ist_offset = timedelta(hours=5, minutes=30)
+    start_time_str = request.json['start_time']
+    end_time_str = request.json['end_time']
+
+    start_time_dt = datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
+    end_time_dt = datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
+
+    start_time = start_time_dt - ist_offset
+    end_time = end_time_dt - ist_offset
+    return handler.get_feedback_summary(start_time, end_time)
 
 
 if __name__ == '__main__':

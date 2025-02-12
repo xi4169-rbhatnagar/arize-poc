@@ -1,10 +1,11 @@
 import os
+from datetime import datetime
 from typing import Dict
 
 from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttributes
 from opentelemetry import trace
 
-from arize_utils import annotate
+from arize_utils import annotate, AnnotationReporter
 from model import Server, Annotation
 
 
@@ -41,3 +42,9 @@ def mark_feedback(span_id: str, thumbs_up: bool):
         ]
     )
     return "Successfully processed the annotation request"
+
+
+def get_feedback_summary(start_time: datetime, end_time: datetime, project_id='UHJvamVjdDox'):
+    df = AnnotationReporter.get_annotations_between(project_id, start_time, end_time)
+    label_counts = df['label'].value_counts().to_dict()
+    return dict(filter(lambda i: 'thumb' in i[0], label_counts.items()))
