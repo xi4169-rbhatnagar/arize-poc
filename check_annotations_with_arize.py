@@ -1,6 +1,7 @@
 import dataclasses
 import os
 import random
+import time
 from typing import List, Dict, Any, Tuple
 
 import httpx
@@ -11,7 +12,7 @@ from openinference.semconv.trace import SpanAttributes, OpenInferenceSpanKindVal
 from opentelemetry import trace
 from phoenix.otel import register
 
-load_dotenv()
+load_dotenv(dotenv_path='envs/deepseek.env')
 
 
 @dataclasses.dataclass
@@ -38,7 +39,7 @@ def annotate(span_id: str, annotations: List[Annotation]):
     }
 
     hclient.post(
-        os.environ.get('ARIZE_URL') + "/span_annotations?sync=false",
+        os.environ.get('ARIZE_URL') + "/v1/span_annotations?sync=false",
         json=annotation_payload,
     )
 
@@ -53,9 +54,9 @@ client = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY"),
 )
 tracer = trace.get_tracer(__name__)
-x, y = (random.randint(0, 50) for _ in range(2))
-span_id_and_feedbacks: List[Tuple[str, List[Annotation]]] = []
-for _ in range(5):
+while True:
+    x, y = (random.randint(-50, 50) for _ in range(2))
+    span_id_and_feedbacks: List[Tuple[str, List[Annotation]]] = []
     with tracer.start_as_current_span("HandleFunctionCall", attributes={
         SpanAttributes.OPENINFERENCE_SPAN_KIND: OpenInferenceSpanKindValues.TOOL.value,
     }) as span:
@@ -72,9 +73,9 @@ for _ in range(5):
         span.set_output(output)
 
         span_id_and_feedbacks.append((span_id, [
-            Annotation('user-feedback', 'thumbs-up' if str(x + y) in output else 'thumbs-down', 1),
+            Annotation('user-feedback', 'thumbs-up' if random.random() > 0.5 else 'thumbs-down', 1),
             Annotation('metrics', 'char-count', len(output))
         ]))
-
-for span_id, annotations in span_id_and_feedbacks:
-    annotate(span_id, annotations)
+    time.sleep(1)
+    for span_id, annotations in span_id_and_feedbacks:
+        annotate(span_id, annotations)
