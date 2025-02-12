@@ -17,10 +17,12 @@ def initialize_server() -> Server:
         base_url=os.environ.get("OPENAI_API_URL"),
         api_key=os.environ.get("OPENAI_API_KEY"),
     )
+
     # Start tracing OTel requests
     trace_provider = register(endpoint="http://localhost:4317")
     OpenAIInstrumentor().instrument(tracer_provider=trace_provider)
-    return Server(llm)
+
+    return Server(llm=llm)
 
 
 app = Flask(__name__)
