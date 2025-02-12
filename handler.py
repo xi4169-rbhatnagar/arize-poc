@@ -4,6 +4,18 @@ from typing import Dict
 from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttributes
 from opentelemetry import trace
 
+from model import Server
+
+
+def ask_llm(question: str, server: Server) -> str:
+    response = server.llm.chat.completions.create(
+        model=os.environ.get('MODEL_TO_USE'),
+        messages=[
+            {"role": "user", "content": question}
+        ],
+    )
+    return response.choices[0].message.content
+
 
 def ask_llm_with_tracing(question, server) -> Dict:
     tracer = trace.get_tracer(__name__)
@@ -11,13 +23,10 @@ def ask_llm_with_tracing(question, server) -> Dict:
         SpanAttributes.OPENINFERENCE_SPAN_KIND: OpenInferenceSpanKindValues.TOOL.value,
     }) as span:
         span_id = span.context.span_id.to_bytes(8, 'big').hex()
-        completion = server.llm.chat.completions.create(
-            model=os.environ.get('MODEL_TO_USE'),
-            messages=[
-                {"role": "user", "content": question}
-            ],
-        )
-        output = completion.choices[0].message.content
         span.set_input(question)
-        span.set_output(output)
-        return {'answer': output, 'span_id': span_id}
+
+        # Get answer from the llm
+        response = ask_llm(question, server)
+
+        span.set_output(response)
+        return {'answer': response, 'span_id': span_id}
