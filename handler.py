@@ -34,11 +34,11 @@ def ask_llm_with_tracing(question, server) -> Dict:
         return {'answer': response, 'span_id': span_id}
 
 
-def mark_feedback(span_id: str, thumbs_up: bool):
+def mark_feedback(span_id: str, feedback: str):
     annotate(
         span_id,
         annotations=[
-            Annotation('user-feedback', 'thumbs-up' if thumbs_up else 'thumbs-down', 1)
+            Annotation('user-feedback', feedback, 1)
         ]
     )
     return "Successfully processed the annotation request"
