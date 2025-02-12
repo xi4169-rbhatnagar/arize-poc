@@ -1,11 +1,6 @@
 arize-phoenix
-openinference-instrumentation-openai
 openinference-instrumentation-langchain
-langchain_core
 openai~=1.61.1
-llama-index-llms-deepseek
-ollama
-crewai
-llama-index-readers-file
-llama_index-llms-groq
 python-dotenv~=1.0.1
+pandas~=2.2.1
+httpx~=0.27.0
