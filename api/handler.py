@@ -4,8 +4,8 @@ from typing import Dict
 from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttributes
 from opentelemetry import trace
 
-from arize_utils import AnnotationHelper
-from llm import ask_llm
+from modules.arize_utils import AnnotationHelper
+from modules.llm import ask_llm
 from models.model import Annotation
 
 
