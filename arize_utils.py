@@ -7,7 +7,7 @@ import httpx
 import pandas as pd
 from httpx import Client
 
-from model import Annotation
+from models.model import Annotation
 
 
 class AnnotationHelper:

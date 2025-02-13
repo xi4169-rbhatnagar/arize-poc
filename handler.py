@@ -1,5 +1,4 @@
 from datetime import datetime
-from datetime import datetime
 from typing import Dict
 
 from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttributes
@@ -7,7 +6,7 @@ from opentelemetry import trace
 
 from arize_utils import AnnotationHelper
 from llm import ask_llm
-from model import Annotation
+from models.model import Annotation
 
 
 def ask_llm_with_tracing(question, server) -> Dict:
