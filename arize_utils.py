@@ -10,20 +10,7 @@ from httpx import Client
 from model import Annotation
 
 
-def annotate(span_id: str, annotations: List[Annotation]):
-    hclient = httpx.Client()
-
-    annotation_payload = {
-        "data": [*map(lambda a: a.to_payload(span_id), annotations)],
-    }
-
-    return hclient.post(
-        os.environ.get('ARIZE_URL') + "/v1/span_annotations?sync=false",
-        json=annotation_payload,
-    )
-
-
-class AnnotationReporter:
+class AnnotationHelper:
     _query = """
     query ($projectId: GlobalID!, $after: String) {
       node(id: $projectId) {
@@ -109,3 +96,16 @@ class AnnotationReporter:
 
         filtered_df = df[(df['startTime'] >= start_time) & (df['endTime'] <= end_time)]
         return filtered_df
+
+    @staticmethod
+    def annotate(span_id: str, annotations: List[Annotation]):
+        client = httpx.Client()
+
+        annotation_payload = {
+            "data": [*map(lambda a: a.to_payload(span_id), annotations)],
+        }
+
+        return client.post(
+            os.environ.get('ARIZE_URL') + "/v1/span_annotations?sync=false",
+            json=annotation_payload,
+        )
