@@ -1,4 +1,4 @@
-import os
+from datetime import datetime
 from datetime import datetime
 from typing import Dict
 
@@ -6,17 +6,8 @@ from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttribu
 from opentelemetry import trace
 
 from arize_utils import AnnotationHelper
-from model import Server, Annotation
-
-
-def ask_llm(question: str, server: Server) -> str:
-    response = server.llm.chat.completions.create(
-        model=os.environ.get('MODEL_TO_USE'),
-        messages=[
-            {"role": "user", "content": question}
-        ],
-    )
-    return response.choices[0].message.content
+from llm import ask_llm
+from model import Annotation
 
 
 def ask_llm_with_tracing(question, server) -> Dict:
@@ -34,7 +25,7 @@ def ask_llm_with_tracing(question, server) -> Dict:
         return {'answer': response, 'span_id': span_id}
 
 
-def mark_feedback(span_id: str, feedback: str):
+def mark_user_feedback(span_id: str, feedback: str):
     AnnotationHelper.annotate(
         span_id,
         annotations=[

@@ -40,7 +40,7 @@ def query():
 def user_feedback():
     span_id = request.json['span_id']
     feedback = request.json['feedback']
-    return handler.mark_feedback(span_id, feedback)
+    return handler.mark_user_feedback(span_id, feedback)
 
 
 @app.get('/report')
