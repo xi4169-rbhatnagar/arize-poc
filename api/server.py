@@ -10,7 +10,7 @@ from phoenix.otel import register
 import handler
 from models.model import Server
 
-load_dotenv('envs/inferix.env')
+load_dotenv('../envs/inferix.env')
 
 
 def initialize_server() -> Server:
