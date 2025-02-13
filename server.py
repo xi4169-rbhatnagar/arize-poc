@@ -8,7 +8,7 @@ from openinference.instrumentation.openai import OpenAIInstrumentor
 from phoenix.otel import register
 
 import handler
-from model import Server
+from models.model import Server
 
 load_dotenv('envs/inferix.env')
 

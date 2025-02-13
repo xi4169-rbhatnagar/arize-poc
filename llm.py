@@ -1,6 +1,6 @@
 import os
 
-from model import Server
+from models.model import Server
 
 
 def ask_llm(question: str, server: Server) -> str:
