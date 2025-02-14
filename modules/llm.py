@@ -3,9 +3,9 @@ import os
 from models.model import Server
 
 
-def ask_llm(question: str, server: Server) -> str:
-    response = server.llm.chat.completions.create(
-        model=os.environ.get('MODEL_TO_USE'),
+def ask_llm(question: str, llm_client, model) -> str:
+    response = llm_client.chat.completions.create(
+        model=model,
         messages=[
             {"role": "user", "content": question}
         ],
