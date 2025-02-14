@@ -6,11 +6,11 @@ from fastapi import FastAPI
 from openai import OpenAI
 from openinference.instrumentation.openai import OpenAIInstrumentor
 from phoenix.otel import register
-
 import handlers
+
 from models.http_params import QueryRequest, FeedbackRequest, ReportRequest
 
-load_dotenv('envs/deepseek.env')
+load_dotenv('../envs/deepseek.env')
 
 
 class Server:
