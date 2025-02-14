@@ -31,7 +31,7 @@ def mark_user_feedback(span_id: str, feedback: str):
             Annotation('user-feedback', feedback, 1)
         ]
     )
-    return "Successfully processed the annotation request"
+    return f"Successfully processed the annotation request for span id: {span_id}"
 
 
 def get_feedback_summary(start_time: datetime, end_time: datetime, project_id='UHJvamVjdDox'):
