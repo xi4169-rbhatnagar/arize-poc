@@ -7,7 +7,7 @@ from openai import OpenAI
 from openinference.instrumentation.openai import OpenAIInstrumentor
 from phoenix.otel import register
 
-import handler
+import handlers
 from models.http_params import QueryRequest, FeedbackRequest, ReportRequest
 
 load_dotenv('envs/deepseek.env')
@@ -37,12 +37,12 @@ server = initialize_server()
 
 @app.get('/query')
 def query(request: QueryRequest):
-    return handler.ask_llm_with_tracing(request.question, server)
+    return handlers.arize.ask_llm_with_tracing(request.question, server)
 
 
 @app.post('/feedback')
 def user_feedback(request: FeedbackRequest):
-    return handler.mark_user_feedback(request.span_id, request.feedback)
+    return handlers.arize.mark_user_feedback(request.span_id, request.feedback)
 
 
 @app.get('/report')
@@ -53,7 +53,7 @@ def get_report(request: ReportRequest):
 
     start_time = start_time_dt - ist_offset
     end_time = end_time_dt - ist_offset
-    return handler.get_feedback_summary(start_time, end_time)
+    return handlers.arize.get_feedback_summary(start_time, end_time)
 
 
 if __name__ == '__main__':
