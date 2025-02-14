@@ -30,9 +30,9 @@ with tracer.start_as_current_span(scenario):
         span_id = span.context.span_id.to_bytes(8, 'big').hex()
         print(span_id)
         client = AzureOpenAI(
-            api_key='C220Ri6vD1THRkhYJrnEAq5SYIvTyEMZOCagTxZOn2ZLle0xSMVaJQQJ99BBACHYHv6XJ3w3AAAAACOGApcZ',
+            api_key=os.environ.get('AZURE_OPENAI_KEY'),
             api_version="2024-02-01",
-            azure_endpoint='https://ai-rishabhbhatnagar2708ai041222174607.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-08-01-preview'
+            azure_endpoint=os.environ.get('AZURE_OPENAI_URL')
         )
 
         question = "What is 2+2"
