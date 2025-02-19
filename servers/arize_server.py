@@ -1,7 +1,6 @@
 import os
 from datetime import datetime, timedelta
 
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from openai import OpenAI
 from openinference.instrumentation.openai import OpenAIInstrumentor
@@ -10,8 +9,6 @@ from phoenix.otel import register
 from handlers.chat import ask_llm_with_tracing
 from handlers.feedback import mark_user_feedback, get_feedback_summary
 from models.http_params import QueryRequest, FeedbackRequest, ReportRequest
-
-load_dotenv('../envs/deepseek.env')
 
 
 class Server:
@@ -55,9 +52,3 @@ def get_report(request: ReportRequest):
     start_time = start_time_dt - ist_offset
     end_time = end_time_dt - ist_offset
     return get_feedback_summary(start_time, end_time)
-
-
-if __name__ == '__main__':
-    import uvicorn
-
-    uvicorn.run(app, host='0.0.0.0', port=7000)
