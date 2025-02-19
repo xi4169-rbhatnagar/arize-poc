@@ -23,11 +23,6 @@ load_dotenv('envs/deepseek.env')
 
 class Server:
     def __init__(self):
-        self.project_client = AIProjectClient.from_connection_string(
-            credential=DefaultAzureCredential(),
-            conn_str=os.environ["PROJECT_CONNECTION_STRING"],
-        )
-
         application_insights_connection_string = self.project_client.telemetry.get_connection_string()
         if not application_insights_connection_string:
             print("Application Insights was not enabled for this project.")
@@ -40,6 +35,13 @@ class Server:
             api_key=os.environ.get('AZURE_OPENAI_KEY'),
             api_version="2024-02-01",
             azure_endpoint=os.environ.get('AZURE_OPENAI_URL')
+        )
+
+    @property
+    def project_client(self):
+        return AIProjectClient.from_connection_string(
+            credential=DefaultAzureCredential(),
+            conn_str=os.environ["PROJECT_CONNECTION_STRING"],
         )
 
 
