@@ -1,14 +1,11 @@
 import os
-from datetime import datetime, timedelta
 
 from fastapi import FastAPI
 from openai import OpenAI
 from openinference.instrumentation.openai import OpenAIInstrumentor
 from phoenix.otel import register
 
-from handlers.chat import ask_llm_with_tracing
-from handlers.feedback import mark_user_feedback, get_feedback_summary
-from models.http_params import QueryRequest, FeedbackRequest, ReportRequest
+from services import chat, feedback
 
 
 class Server:
@@ -32,23 +29,5 @@ def initialize_server() -> Server:
 app = FastAPI()
 server = initialize_server()
 
-
-@app.get('/query')
-def query(request: QueryRequest):
-    return ask_llm_with_tracing(request.question, server.llm)
-
-
-@app.post('/feedback')
-def user_feedback(request: FeedbackRequest):
-    return mark_user_feedback(request.span_id, request.feedback)
-
-
-@app.get('/report')
-def get_report(request: ReportRequest):
-    ist_offset = timedelta(hours=5, minutes=30)
-    start_time_dt = datetime.strptime(request.start_time, '%Y-%m-%d %H:%M:%S')
-    end_time_dt = datetime.strptime(request.end_time, '%Y-%m-%d %H:%M:%S')
-
-    start_time = start_time_dt - ist_offset
-    end_time = end_time_dt - ist_offset
-    return get_feedback_summary(start_time, end_time)
+app.include_router(chat.router.get_router(server.llm))
+app.include_router(feedback.router.get_router())

@@ -1,10 +1,13 @@
 import os
 from typing import Dict
 
+from fastapi import APIRouter
 from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttributes
 from opentelemetry import trace
 
 from modules.llm import ask_llm
+
+chat_router = APIRouter(prefix="/chat", tags=["chat"])
 
 
 def ask_llm_with_tracing(question: str, llm) -> Dict:
