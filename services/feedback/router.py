@@ -21,6 +21,6 @@ def get_router() -> APIRouter:
 
         start_time = start_time_dt - ist_offset
         end_time = end_time_dt - ist_offset
-        return get_feedback_summary(start_time, end_time)
+        return get_feedback_summary(start_time, end_time, request.project_id)
 
     return feedback_router

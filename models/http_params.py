@@ -13,3 +13,4 @@ class FeedbackRequest(BaseModel):
 class ReportRequest(BaseModel):
     start_time: str
     end_time: str
+    project_id: str
