@@ -6,7 +6,6 @@ from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttribu
 from opentelemetry import trace
 from phoenix.trace import using_project
 
-import constants
 from modules.llm import ask_llm
 
 chat_router = APIRouter(prefix="/chat", tags=["chat"])
@@ -14,7 +13,7 @@ chat_router = APIRouter(prefix="/chat", tags=["chat"])
 
 def ask_llm_with_tracing(question: str, llm) -> Dict:
     tracer = trace.get_tracer(__name__)
-    with using_project(constants.ARIZE_PROJECT_NAME):
+    with using_project(os.environ.get('ARIZE_PROJECT_NAME')):
         with tracer.start_as_current_span("HandleFunctionCall", attributes={
             SpanAttributes.OPENINFERENCE_SPAN_KIND: OpenInferenceSpanKindValues.TOOL.value,
         }) as span:
