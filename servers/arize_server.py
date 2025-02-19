@@ -7,7 +7,8 @@ from openai import OpenAI
 from openinference.instrumentation.openai import OpenAIInstrumentor
 from phoenix.otel import register
 
-from handlers.arize import ask_llm_with_tracing, mark_user_feedback, get_feedback_summary
+from handlers.chat import ask_llm_with_tracing
+from handlers.feedback import mark_user_feedback, get_feedback_summary
 from models.http_params import QueryRequest, FeedbackRequest, ReportRequest
 
 load_dotenv('../envs/deepseek.env')
