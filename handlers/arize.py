@@ -6,7 +6,7 @@ from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttribu
 from opentelemetry import trace
 
 from models.model import Annotation
-from modules.arize_utils import AnnotationHelper
+from modules.annotations import AnnotationHelper
 from modules.llm import ask_llm
 
 
