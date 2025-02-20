@@ -1,15 +1,22 @@
 from datetime import datetime
 
+from models.http_params import FeedbackRequest
 from models.model import Annotation
 from modules.annotations import AnnotationHelper
 
 
-def mark_user_feedback(span_id: str, feedback: str):
+def mark_user_feedback(span_id: str, request: FeedbackRequest):
+    reaction = "thumbs-down" if request.feedback == 0 else "thumbs-up"
+    annotations = [
+        Annotation(name="user-feedback", label=reaction, score=1),
+    ]
+    if request.category:
+        annotations.append(
+            Annotation(name='feedback-category', label=request.category, score=1, explanation=request.comment)
+        )
     AnnotationHelper.annotate(
         span_id,
-        annotations=[
-            Annotation('user-feedback', feedback, 1)
-        ]
+        annotations=annotations
     )
     return f"Successfully processed the annotation request for span id: {span_id}"
 

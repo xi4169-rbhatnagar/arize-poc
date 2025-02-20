@@ -8,6 +8,8 @@ class QueryRequest(BaseModel):
 class FeedbackRequest(BaseModel):
     span_id: str
     feedback: int
+    category: str
+    comment: str
 
 
 class ReportRequest(BaseModel):
