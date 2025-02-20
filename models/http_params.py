@@ -7,7 +7,7 @@ class QueryRequest(BaseModel):
 
 class FeedbackRequest(BaseModel):
     span_id: str
-    feedback: str
+    feedback: int
 
 
 class ReportRequest(BaseModel):
