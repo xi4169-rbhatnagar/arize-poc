@@ -60,7 +60,7 @@ class AnnotationHelper:
         dfs = []
         has_next_page, after = True, ""
         while has_next_page:
-            response = Client(base_url=base_url).post(
+            response = Client(base_url=base_url, headers=cls._get_headers()).post(
                 "/graphql",
                 json={
                     "query": cls._query,
@@ -70,12 +70,17 @@ class AnnotationHelper:
                     },
                 },
             )
+            print(response.status_code, response.content)
             spans = response.json()["data"]["node"]["spans"]
             if not (df := cls._get_df(spans)).empty:
                 dfs.append(df)
             has_next_page = spans["pageInfo"]["hasNextPage"]
             after = spans["pageInfo"]["endCursor"]
         return pd.concat(dfs)
+
+    @classmethod
+    def _get_headers(cls):
+        return {'Authorization': 'Bearer ' + os.environ.get('PHOENIX_API_KEY')}
 
     @classmethod
     def get_annotations_between(cls, project_id: str, start_time: datetime, end_time: datetime) -> pd.DataFrame:
@@ -97,8 +102,8 @@ class AnnotationHelper:
         filtered_df = df[(df['startTime'] >= start_time) & (df['endTime'] <= end_time)]
         return filtered_df
 
-    @staticmethod
-    def annotate(span_id: str, annotations: List[Annotation]):
+    @classmethod
+    def annotate(cls, span_id: str, annotations: List[Annotation]):
         client = httpx.Client()
 
         annotation_payload = {
@@ -108,4 +113,5 @@ class AnnotationHelper:
         return client.post(
             os.environ.get('ARIZE_URL') + "/v1/span_annotations?sync=false",
             json=annotation_payload,
+            headers=cls._get_headers()
         )
