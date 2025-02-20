@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -8,8 +10,8 @@ class QueryRequest(BaseModel):
 class FeedbackRequest(BaseModel):
     span_id: str
     feedback: int
-    category: str
-    comment: str
+    category: Optional[str] = ''
+    comment: Optional[str] = ''
 
 
 class ReportRequest(BaseModel):
