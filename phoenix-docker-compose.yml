@@ -10,6 +10,8 @@ services:
       - 9090:9090  # [Optional] PROMETHEUS PORT IF ENABLED
     environment:
       - PHOENIX_SQL_DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - PHOENIX_ENABLE_AUTH=true
+      - PHOENIX_SECRET=<PHOENIX_SECRET>
   db:
     image: postgres
     restart: always
