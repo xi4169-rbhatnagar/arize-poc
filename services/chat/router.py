@@ -10,6 +10,6 @@ def get_router(llm: OpenAI) -> APIRouter:
 
     @chat_router.get('/query')
     def query(request: QueryRequest):
-        return ask_llm_with_tracing(request.question, llm)
+        return ask_llm_with_tracing(request.question, request.user_id, llm)
 
     return chat_router
